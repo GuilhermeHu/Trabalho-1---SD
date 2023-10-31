@@ -19,8 +19,7 @@
 ----------------------------------------------------------------------------------
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
---use ieee.numeric_std.all;
-use IEEE.STD_LOGIC_arith.all;
+use ieee.numeric_std.all;
 
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
@@ -32,8 +31,9 @@ use IEEE.STD_LOGIC_arith.all;
 --use UNISIM.VComponents.all;
 
 entity ULA is
-    Port ( selector : in STD_LOGIC_VECTOR (3 downto 0);
-			  --clock : in STD_LOGIC;
+    Port ( a : in STD_LOGIC_VECTOR (3 downto 0);
+			  b : in STD_LOGIC_VECTOR (3 downto 0);
+			  selector : in STD_LOGIC_VECTOR (2 downto 0);
            s : out  STD_LOGIC_VECTOR (3 downto 0);
 			  overflow : out  STD_LOGIC;
            carry_out : out  STD_LOGIC;
@@ -41,7 +41,7 @@ entity ULA is
            zero : out  STD_LOGIC);
 end ULA;
 
-architecture structural of ULA is
+architecture Behavioral of ULA is
 
 -- Somador de operandos de 4 bits, sendo 1 bit de sinal e 3 de magnitude
 component somador_4bits is
@@ -124,15 +124,6 @@ component par_ou_impar is
 end component;
 
 
-component counter_seconds is
-	PORT (clock_50 : in STD_LOGIC;
-			counter_out: out unsigned (3 downto 0);
-			counter_out_2: out unsigned (3 downto 0));
-end component;
-
-signal mm : STD_LOGIC_VECTOR (3 downto 0) := "1111";
-SIGNAL num_1, num_2 : UNSIGNED (3 downto 0) := (others => '0');
-SIGNAL c, d : STD_LOGIC_VECTOR (3 downto 0);
 SIGNAL somador_4bits_s : STD_LOGIC_VECTOR (3 downto 0);
 SIGNAL somador_4bits_carrys : STD_LOGIC_VECTOR (4 downto 0);
 SIGNAL subtrator_4bits_s : STD_LOGIC_VECTOR (3 downto 0);
@@ -151,95 +142,57 @@ SIGNAL somador_4bits_carry_out, subtrator_4bits_carry_out, incr_1_carry_out, par
 SIGNAL somador_4bits_zero, subtrator_4bits_zero, incr_1_zero, comp_2_zero, desl_esq_zero, desl_dir_zero, par_ou_impar_zero, comparador_zero : STD_LOGIC;
 SIGNAL somador_4bits_bit_sinal, subtrator_4bits_bit_sinal, incr_1_bit_sinal, comp_2_bit_sinal, desl_esq_bit_sinal, desl_dir_bit_sinal, par_ou_impar_bit_sinal, comparador_bit_sinal : STD_LOGIC;
 
-signal clk : std_logic := '1';
-constant clk_period : time := 1000 ms;
 
 begin
 
--- clk <= not clk after clk_period/2;
--- counter_seconds_Label : counter_seconds port map (clk, num_1, num_2);
-
--- process (num_1, num_2) begin
--- for i in 3 downto 0 loop
--- c(i) <= num_1(i);
--- d(i) <= num_2(i);
--- end loop;
--- end process;
-
-somador_4bits_Label: somador_4bits port map (c, d, '0', somador_4bits_s, somador_4bits_overflow, somador_4bits_carry_out, somador_4bits_carrys, somador_4bits_bit_sinal, somador_4bits_zero);
-subtrator_4bits_Label : subtrator_4bits port map (c, d, subtrator_4bits_s, subtrator_4bits_overflow, subtrator_4bits_carry_out, subtrator_4bits_bit_sinal, subtrator_4bits_zero);
-incr_1_Label: incr_1 port map (c, incr_1_s, incr_1_overflow, incr_1_carry_out, incr_1_bit_sinal, incr_1_zero);
-comp_2_Label : comp_2 port map (c, comp_2_s, comp_2_bit_sinal, comp_2_zero);
-desl_esq_Label: desl_esq port map(c, desl_esq_s, desl_esq_bit_sinal, desl_esq_zero);
-desl_dir_Label : desl_dir port map (c, desl_dir_s, desl_dir_bit_sinal, desl_dir_zero);
-comparador_Label : comparador port map (c, d, comparador_s);
-par_ou_impar_Label : par_ou_impar port map (c, d, par_ou_impar_s, par_ou_impar_overflow, par_ou_impar_carry_out, par_ou_impar_zero, comp_2_bit_sinal);
-
-
-
-
-
-clk <= not clk after clk_period/2;
-
---processo do contador
-process (clk) begin 
-	
-	if rising_edge(clk) then
-		if num_2 = unsigned(mm) then 
-			num_1 <= num_1 + 1;
-		end if;
-		num_2 <= num_2 + 1;
-	end if;
-	
-end process;
-
-process (num_1, num_2) begin
-	for i in 3 downto 0 loop	
-		c(i) <= num_1(i);
-		d(i) <= num_2(i);
-	end loop;
-end process;
-
+somador_4bits_Label: somador_4bits port map (a, b, '0', somador_4bits_s, somador_4bits_overflow, somador_4bits_carry_out, somador_4bits_carrys, somador_4bits_bit_sinal, somador_4bits_zero);
+subtrator_4bits_Label : subtrator_4bits port map (a, b, subtrator_4bits_s, subtrator_4bits_overflow, subtrator_4bits_carry_out, subtrator_4bits_bit_sinal, subtrator_4bits_zero);
+incr_1_Label: incr_1 port map (a, incr_1_s, incr_1_overflow, incr_1_carry_out, incr_1_bit_sinal, incr_1_zero);
+comp_2_Label : comp_2 port map (a, comp_2_s, comp_2_bit_sinal, comp_2_zero);
+desl_esq_Label: desl_esq port map(a, desl_esq_s, desl_esq_bit_sinal, desl_esq_zero);
+desl_dir_Label : desl_dir port map (a, desl_dir_s, desl_dir_bit_sinal, desl_dir_zero);
+comparador_Label : comparador port map (a, b, comparador_s);
+par_ou_impar_Label : par_ou_impar port map (a, b, par_ou_impar_s, par_ou_impar_overflow, par_ou_impar_carry_out, par_ou_impar_zero, par_ou_impar_bit_sinal);
 
 
 process(selector, incr_1_s, desl_esq_s, somador_4bits_s, subtrator_4bits_s, desl_dir_s, par_ou_impar_s, comp_2_s, comparador_s)
 
 begin
 	case selector is
-		when "0000" => -- somador_4bits
+		when "000" => -- somador_4bits
 		   overflow <= somador_4bits_overflow;
 			carry_out <= somador_4bits_carry_out;
 			zero <= somador_4bits_zero;
 			bit_sinal <= somador_4bits_bit_sinal;
 			s <= somador_4bits_s;
-		when "0001" => -- subtrator_4bits
+		when "001" => -- subtrator_4bits
 			overflow <= subtrator_4bits_overflow;
 			carry_out <= subtrator_4bits_carry_out;
 			zero <= subtrator_4bits_zero;
 			bit_sinal <= subtrator_4bits_bit_sinal;
 			s <= subtrator_4bits_s;
-		when "0010" => -- incr_1
+		when "010" => -- incr_1
 			overflow <= incr_1_overflow;
 			carry_out <= incr_1_zero;
 			zero <= incr_1_zero;
 			bit_sinal <= incr_1_bit_sinal;
 			s <= incr_1_s;
-		when "0011" => -- comp_2
+		when "011" => -- comp_2
 			carry_out <= '0';
 			zero <= comp_2_zero;
 			bit_sinal <= comp_2_bit_sinal;
 			s <= comp_2_s;
-		when "0100" => -- desl_dir
+		when "100" => -- desl_dir
 			carry_out <= '0';
 			zero <= desl_dir_zero;
 			bit_sinal <= desl_dir_bit_sinal;
 			s <= desl_dir_s;
-		when "0101" => -- desl_esq
+		when "101" => -- desl_esq
 			carry_out <= '0';
 			zero <= desl_esq_zero;
 			bit_sinal <= desl_esq_bit_sinal;
 			s <= desl_esq_s;
-		when "0110" => -- comparador
+		when "110" => -- comparador
 			carry_out <= '0';
 			zero <= comparador_zero;
 			bit_sinal <= comparador_bit_sinal;
@@ -257,8 +210,7 @@ begin
 			s(1) <= '0';
 			s(0) <= par_ou_impar_s;
 
-			
 	end case;
 	end process;
 
-end structural;
+end Behavioral;

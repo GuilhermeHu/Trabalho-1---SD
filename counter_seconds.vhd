@@ -4,7 +4,7 @@
 -- 
 -- Create Date:    16:11:42 10/30/2023 
 -- Design Name: 
--- Module Name:    counter_seconds - Behavioral 
+-- Module Name:    counter - Behavioral 
 -- Project Name: 
 -- Target Devices: 
 -- Tool versions: 
@@ -23,52 +23,35 @@ use ieee.numeric_std.all;
 
 
 entity counter_seconds is
-	GENERIC (t_max : INTEGER := 1000000);
+	GENERIC (t_max : INTEGER := 100000000);
 	PORT (clock_50 : in STD_LOGIC;
-			counter_out: out unsigned (3 downto 0) := "0000";
-			counter_out_2: out unsigned (3 downto 0) := "0000");
+			reset : in STD_LOGIC ;	
+			counter_out: out unsigned (7 downto 0) := "00000000");
 end counter_seconds;
 
 architecture Behavioral of counter_seconds is
-
  
-SIGNAL counter_temp : unsigned(3 downto 0) := "0000";
-SIGNAL counter_temp_2 : unsigned(3 downto 0) := "0000";
-
+SIGNAL contagem_geral : unsigned(7 downto 0) := "00000000";
 
 begin
 
-
-counter_label : process (clock_50)
+counter_label : process (clock_50, reset)
 variable slow_clock : INTEGER RANGE t_max downto 0 := 0;
 	begin
-	if (clock_50'event AND clock_50 = '1') then
-	--if (rising_edge (clock_50)) then
-			if (slow_clock <= t_max) then
+	if (reset = '1') then
+		contagem_geral <= "00000000"; --zerar o contador quando o reset for habilitado
+	elsif rising_edge (clock_50) then 
+	-- if (clock_50'event AND clock_50 = '1') then
+		if (slow_clock <= t_max) then
 				slow_clock := slow_clock + 1;
-			else counter_temp <= counter_temp + 1;
+			else contagem_geral <= contagem_geral + 1;
 			slow_clock := 0;
 			end if;
 		end if;
 end process;
-
-
-counter_label_2 : process (clock_50)
-variable slow_clock_2 : INTEGER RANGE t_max downto 0 := 0;
-	begin
-		if (clock_50'event AND clock_50 = '1') then
-		--if (rising_edge (clock_50)) then
-			if (slow_clock_2 <= t_max) then
-				slow_clock_2 := slow_clock_2 + 2;
-			else counter_temp_2 <= counter_temp_2 + 2;
-			slow_clock_2 := 0;
-			end if;
-		end if;
-end process;
 			
-counter_out <= counter_temp;
-counter_out_2 <= counter_temp_2;
-	
+counter_out <= contagem_geral;
+
 end Behavioral;
 
 

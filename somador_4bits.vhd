@@ -57,8 +57,12 @@ signal carry : STD_LOGIC_VECTOR (4 downto 0);
 signal z : STD_LOGIC_VECTOR (3 downto 0);
 
 begin
-carry(0) <= c_in;
+carry(0) <= c_in;          --carry do primeiro módulo de somador de um bit, que em uma soma sempre é o 0. O cin que o carry(0) recebe é definido como 0 nos valores dos componentes que chamam essa entidade
 
+-- O módulo de somador de 4 bits é, em suma, uma concatenação de módulos de somador de 1 bit,
+-- no qual o cout do módulo do bit anterior (n-1) serve de cin para o módulo atual (n). O
+-- módulo do somador de 4 bits (bit 0) recebe um cin que é sempre 0 numa soma, e o cout do 
+-- bit mais significativo é carry out, uma das flags destacadas.
 exec: for i in 0 to 3 generate
 			somador_4bits: somador PORT MAP(a(i), b(i), carry(i), z(i));
 			carry(i+1) <= (a(i) AND b(i)) OR (carry(i) AND (a(i) OR b(i)));

@@ -29,7 +29,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
-entity somador is                         --somador: retorna a soma e carry do bit A com o bit B e com o carry_in (c_in, carry do bit anterior), std_logic -> std_logic
+entity somador is                         --somador: retorna o resultado da soma do bit A com o bit B e com o carry_in (c_in, carry do bit anterior), bem como o carry out dessa operação; std_logic -> std_logic
     Port ( a : in  STD_LOGIC;             --entrada do bit A
            b : in  STD_LOGIC;             --entrada do bit B
            c_in : in  STD_LOGIC;          --entrada do bit c_in
@@ -41,7 +41,7 @@ architecture Behavioral of somador is
 
 begin
 
-s <= (a XOR b) XOR c_in;                         --soma de dois bits se dá pela expressão booleana [(A XOR B) XOR cin], encontrado através da simplificação da tabela verdade 
+s <= (a XOR b) XOR c_in;                         --soma de dois bits se dá pela expressão booleana [(A XOR B) XOR cin], encontrada através da simplificação da tabela verdade 
 c_out <= (a AND b) OR (c_in AND (a OR b));       --c_out de dois bits se dá pela expressão booleana [(A AND B) OR  (cin AND (A OR B))], encontrado através da tabela verdade 
 
 end Behavioral;

@@ -55,19 +55,20 @@ component counter_seconds is
 end component;
 
 --Signals que servirão como valores de entrada para a ULA
---A ideia é que o contador conte um vetor de 8 bits, e a parte direita desse grande vetor (os 4 bits mais à direita) seja a entrada A da ULA, enquanto
---  a parte mais à esquerda desse grande vetor (os 4 bits mais à esquerda) sejam os valores da entrada B da ULA. Objetiva-se, com isso, realizar uma
---  iteração com todos os valores possíveis a se realizar uma operação
 signal A,B: std_logic_vector (3 downto 0);
-signal AB: unsigned (7 downto 0);
+signal BA: unsigned (7 downto 0);
+
+--A ideia é que o contador conte um vetor de 8 bits (BA), e a parte direita desse grande vetor (os 4 bits mais à direita) seja a entrada A da ULA, enquanto
+--  a parte mais à esquerda desse grande vetor (os 4 bits mais à esquerda) sejam os valores da entrada B da ULA. Objetiva-se, com isso, realizar uma
+--  iteração com todos os valores possíveis para servirem de entradas para a ULA
 
 begin
 	
-	ula_process: ula PORT MAP (A, B, selector, s, flag_overflow, flag_carry_out, flag_sinal, flag_zero);            --Processo da ULA
-	conta: counter_seconds PORT MAP(clk, reset, AB);                                                                --Processo do contador
+	ula_process: ula PORT MAP (A, B, selector, s, flag_overflow, flag_carry_out, flag_sinal, flag_zero);            --Execução da ULA
+	conta: counter_seconds PORT MAP(clk, reset, BA);                                                                --Execução do contador
 
 	--Atribuição dos valores que servirão de entrada para a ULA: 
-	A <= std_logic_vector(AB(3 downto 0));                                        --Entrada A são os 4 bits mais à direita do grande vetor
-	B <= std_logic_vector(AB(7 downto 4));                                        --Entrada B são os 4 bits mais à esquerda do grande vetor
+	A <= std_logic_vector(BA(3 downto 0));                                        --Entrada A são os 4 bits mais à direita do grande vetor
+	B <= std_logic_vector(BA(7 downto 4));                                        --Entrada B são os 4 bits mais à esquerda do grande vetor
 
 end hardware;

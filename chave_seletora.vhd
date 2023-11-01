@@ -86,6 +86,7 @@ end component;
 component comp_2 is
     Port ( a : in  STD_LOGIC_VECTOR (3 downto 0);
            s : out  STD_LOGIC_VECTOR (3 downto 0);
+	   carry_out : out STD_LOGIC;
 	   bit_sinal : out STD_LOGIC;
            zero : out  STD_LOGIC);
 end component;
@@ -142,7 +143,7 @@ SIGNAL par_ou_impar_s : STD_LOGIC;
 
 --Declaração sinais usados que representam as flags (overflow, carry_out, sinal e zero) da ULA
 SIGNAL somador_4bits_overflow, subtrator_4bits_overflow, incr_1_overflow, par_ou_impar_overflow: STD_LOGIC;
-SIGNAL somador_4bits_carry_out, subtrator_4bits_carry_out, incr_1_carry_out, par_ou_impar_carry_out : STD_LOGIC;
+SIGNAL somador_4bits_carry_out, subtrator_4bits_carry_out, comp_2_carry_out, incr_1_carry_out, par_ou_impar_carry_out : STD_LOGIC;
 SIGNAL somador_4bits_zero, subtrator_4bits_zero, incr_1_zero, comp_2_zero, desl_esq_zero, desl_dir_zero, par_ou_impar_zero, comparador_zero : STD_LOGIC;
 SIGNAL somador_4bits_bit_sinal, subtrator_4bits_bit_sinal, incr_1_bit_sinal, comp_2_bit_sinal, desl_esq_bit_sinal, desl_dir_bit_sinal, par_ou_impar_bit_sinal, comparador_bit_sinal : STD_LOGIC;
 
@@ -153,7 +154,7 @@ begin
 somador_4bits_Label: somador_4bits port map (a, b, '0', somador_4bits_s, somador_4bits_overflow, somador_4bits_carry_out, somador_4bits_carrys, somador_4bits_bit_sinal, somador_4bits_zero);
 subtrator_4bits_Label : subtrator_4bits port map (a, b, subtrator_4bits_s, subtrator_4bits_overflow, subtrator_4bits_carry_out, subtrator_4bits_bit_sinal, subtrator_4bits_zero);
 incr_1_Label: incr_1 port map (a, incr_1_s, incr_1_overflow, incr_1_carry_out, incr_1_bit_sinal, incr_1_zero);
-comp_2_Label : comp_2 port map (a, comp_2_s, comp_2_bit_sinal, comp_2_zero);
+comp_2_Label : comp_2 port map (a, comp_2_s, comp_2_carry_out, comp_2_bit_sinal, comp_2_zero);
 desl_esq_Label: desl_esq port map(a, desl_esq_s, desl_esq_bit_sinal, desl_esq_zero);
 desl_dir_Label : desl_dir port map (a, desl_dir_s, desl_dir_bit_sinal, desl_dir_zero);
 comparador_Label : comparador port map (a, b, comparador_s);
@@ -165,7 +166,7 @@ process(selector, incr_1_s, desl_esq_s, somador_4bits_s, subtrator_4bits_s, desl
 begin
 	case selector is
 		when "000" => -- somador de 4 bits                                  -- "000" -> somador de 4 bits
-		   overflow <= somador_4bits_overflow;                              -- "001" -> subtrator de 4 bits
+		        overflow <= somador_4bits_overflow;                         -- "001" -> subtrator de 4 bits
 			carry_out <= somador_4bits_carry_out;                       -- "010" -> incremento a 1
 			zero <= somador_4bits_zero;                                 -- "011" -> complemento a 2
 			bit_sinal <= somador_4bits_bit_sinal;                       -- "100" -> deslocamento à direita
@@ -183,7 +184,7 @@ begin
 			bit_sinal <= incr_1_bit_sinal;
 			s <= incr_1_s;
 		when "011" => -- complemento a 2
-			carry_out <= '0';
+			carry_out <= comp_2_carry_out;
 			zero <= comp_2_zero;
 			bit_sinal <= comp_2_bit_sinal;
 			s <= comp_2_s;

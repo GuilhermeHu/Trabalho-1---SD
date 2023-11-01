@@ -41,7 +41,7 @@ end comp_2;
 
 architecture Behavioral of comp_2 is
 
-component somador_4bits is                                    --Chamada do component do somador de 4 bits, que será utilizado para incrementar +1
+component somador_4bits is                                    --Declaração do component do somador de 4 bits, que será utilizado para incrementar +1
     Port ( a : in  STD_LOGIC_VECTOR (3 downto 0);             --durante a operação de complemento a 2, após a inversão da entrada fornecida
            b : in  STD_LOGIC_VECTOR (3 downto 0);
            c_in : in  STD_LOGIC;
@@ -66,7 +66,7 @@ a_inv(2) <= NOT a(2);
 a_inv(1) <= NOT a(1);
 a_inv(0) <= NOT a(0);
 
-soma: somador_4bits PORT MAP(a_inv, b, '0', a_inv_incr, c_out, carry);     --Chamada do component do somador de 4 bits, que será utilizado para incrementar +1 
+soma: somador_4bits PORT MAP(a_inv, b, '0', a_inv_incr, c_out, carry);     --Exxecução do component do somador de 4 bits, que será utilizado para incrementar +1 
 
 s <= a_inv_incr;
 

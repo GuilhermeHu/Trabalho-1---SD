@@ -72,7 +72,7 @@ s <= r(0);                   --A paridade de um número depende exclusivamente d
                              --um número binário que apresente como bit menos significativo o '1', é ímpar por em sua conversão para decimal somar-se 1
 overflow <= ov;
 carry_out <= c_out;
-bit_sinal <= '0';
+bit_sinal <= r(3);
 zero <= zeron;
 
 end Behavioral;

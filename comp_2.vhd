@@ -35,6 +35,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 entity comp_2 is
     Port ( a : in  STD_LOGIC_VECTOR (3 downto 0);             --Entrada, o número binário de 4 bits do qual se quer calcular o complemento a 2
            s : out  STD_LOGIC_VECTOR (3 downto 0);            --Resultado da operação, que retorna o complemento a 2 da entrada dada
+	   carry_out : out STD_LOGIC;                         --Flag de carry_out, apontando sehouve carry_out durante a operação de soma que ocorre ao incrementar +1
 			  bit_sinal : out STD_LOGIC;          --Flag de sinal, apontando se o resultado da operação é positivo (0) ou negativo (1)
 			  zero : out STD_LOGIC);              --Flag de zero, apontando se o resultado da operação é o valor zero ("0000")
 end comp_2;
@@ -70,6 +71,7 @@ soma: somador_4bits PORT MAP(a_inv, b, '0', a_inv_incr, c_out, carry);     --Exx
 
 s <= a_inv_incr;
 
+carry_out <= c_out;
 bit_sinal <= a_inv_incr(3);
 zero <= '1' when a_inv_incr = "0000" else '0';
 

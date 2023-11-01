@@ -30,7 +30,7 @@ use ieee.numeric_std.all;
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
-entity ULA is
+entity ULA is                                                    --Entidade da ULA
     Port ( a : in STD_LOGIC_VECTOR (3 downto 0);                 --Operando A da ULA, um número binário de 4 bits
 	   b : in STD_LOGIC_VECTOR (3 downto 0);                 --Operando B da ULA, um número binário de 4 bits
 	   selector : in STD_LOGIC_VECTOR (2 downto 0);          --chave de controle que define a operação a ser feita na ULA (vai de 000 a 111)

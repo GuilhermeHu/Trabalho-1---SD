@@ -31,19 +31,20 @@ use ieee.numeric_std.all;
 --use UNISIM.VComponents.all;
 
 entity ULA is
-    Port ( a : in STD_LOGIC_VECTOR (3 downto 0);
-	   b : in STD_LOGIC_VECTOR (3 downto 0);
-	   selector : in STD_LOGIC_VECTOR (2 downto 0);
-           s : out  STD_LOGIC_VECTOR (3 downto 0);
-	   overflow : out  STD_LOGIC;
-           carry_out : out  STD_LOGIC;
-	   bit_sinal : out  STD_LOGIC;
-           zero : out  STD_LOGIC);
+    Port ( a : in STD_LOGIC_VECTOR (3 downto 0);                 --Operando A da ULA, um número binário de 4 bits
+	   b : in STD_LOGIC_VECTOR (3 downto 0);                 --Operando B da ULA, um número binário de 4 bits
+	   selector : in STD_LOGIC_VECTOR (2 downto 0);          --chave de controle que define a operação a ser feita na ULA (vai de 000 a 111)
+           s : out  STD_LOGIC_VECTOR (3 downto 0);               --Resultado da operação escolhida na ULA, um número binário de 4 bits
+	   overflow : out  STD_LOGIC;                            --Flag de overflow, apontando se houve overflow em uma operação que envolva a soma das entradas
+           carry_out : out  STD_LOGIC;                           --Flag de carry out, apontando se houve carry out em uma operação que envolva a soma das entradas
+	   bit_sinal : out  STD_LOGIC;                           --Flag de sinal, que aponta se o resultado da operação da ULA deu um valor positivo (0) ou negativo (1)
+           zero : out  STD_LOGIC);                               --Flag de zero, apontando se o resultado da operação da ULA deu exatamente o valor zero ("0000")
 end ULA;
 
 architecture Behavioral of ULA is
 
--- Somador de operandos de 4 bits, sendo 1 bit de sinal e 3 de magnitude
+-- Declaração do módulo de somador de 4 bits
+-- Esse módulo realiza a soma de dois operandos de 4 bits, sendo 1 bit de sinal e 3 de magnitude
 component somador_4bits is
     Port ( a : in  STD_LOGIC_VECTOR (3 downto 0);
            b : in  STD_LOGIC_VECTOR (3 downto 0);
@@ -56,7 +57,9 @@ component somador_4bits is
            zero : out  STD_LOGIC);
 end component;
 
--- Somador de operandos de 4 bits, sendo 1 bit de sinal e 3 de magnitude
+-- Declaração do componente de subtrator de 4 bits
+-- Esse módulo realiza a subtração de dois operandos de 4 bits, sendo 1 bit de sinal e 3 de magnitude. Ou seja, realiza a soma do operando A com a versão
+-- em complemento a 2 do operando B
 component subtrator_4bits is
     Port ( a : in  STD_LOGIC_VECTOR (3 downto 0);
            b : in  STD_LOGIC_VECTOR (3 downto 0);
@@ -67,7 +70,8 @@ component subtrator_4bits is
 			  zero : out STD_LOGIC);
 end component;
 
--- Adiciona +1 a um número de 4 bits fornecido, sendo 1 bit de sinal e 3 de magnitude
+-- Declaração do componente de incremento a 1
+-- Esse módulo adiciona +1 a um número de 4 bits fornecido, sendo 1 bit de sinal e 3 de magnitude
 component incr_1 is
     Port ( a : in  STD_LOGIC_VECTOR (3 downto 0);
            s : out  STD_LOGIC_VECTOR (3 downto 0);
@@ -77,7 +81,8 @@ component incr_1 is
 	   zero : out STD_LOGIC);
 end component;
 
--- Realiza o complemento a 2 do número fornecido
+-- Declaração do componente de complemento a 2
+-- Esse módulo realiza o complemento a 2 do número fornecido
 component comp_2 is
     Port ( a : in  STD_LOGIC_VECTOR (3 downto 0);
            s : out  STD_LOGIC_VECTOR (3 downto 0);
@@ -85,8 +90,8 @@ component comp_2 is
            zero : out  STD_LOGIC);
 end component;
 
--- Desloca, à direita, todos os bits do número fornecido. No lado mais à equerda, acrescenta-se
--- um 0.
+-- Declaração do componente de deslocamento à direita
+-- Desloca, à direita, todos os bits do número fornecido. No lado mais à equerda, acrescenta-se um 0.
 component desl_dir is
     Port ( a : in  STD_LOGIC_VECTOR (3 downto 0);
            s : out  STD_LOGIC_VECTOR (3 downto 0);
@@ -94,8 +99,8 @@ component desl_dir is
            zero : out  STD_LOGIC);
 end component;
 
--- Desloca, à esquerda, todos os bits do número fornecido. No lado mais à direita, acrescenta-se
--- um 0.
+-- Declaração do componente de deslocamento à esquerda
+-- Esse módulo desloca, à esquerda, todos os bits do número fornecido. No lado mais à direita, acrescenta-se um 0.
 component desl_esq is
     Port ( a : in  STD_LOGIC_VECTOR (3 downto 0);
            s : out  STD_LOGIC_VECTOR (3 downto 0);
@@ -103,16 +108,16 @@ component desl_esq is
            zero : out  STD_LOGIC);
 end component;
 
--- Verifica se os dois valores fornecidos são iguais. A resposta é "0001" se forem iguais, caso
--- contrário é "0000".
+-- Declaração do componente do comparador
+-- Esse módulo verifica se os dois valores fornecidos são iguais. A resposta é "0001" se forem iguais, caso contrário é "0000".
 component comparador is
     Port ( a : in  STD_LOGIC_VECTOR (3 downto 0);
            b : in  STD_LOGIC_VECTOR (3 downto 0);
 	   s : out  STD_LOGIC);
 end component;
 
--- Verifica se a soma de dois numeros fornecidos é par ou ímpar. Caso seja par, resulta em "0000",
--- por outro lado, se for ímpar, resulta em "0001".
+-- Declaração do componente do módulo de "par ou ímpar da soma"
+-- Esse módulo verifica se a soma de dois números fornecidos é par ou ímpar. Caso seja par, resulta em "0000", por outro lado, se for ímpar, resulta em "0001".
 component par_ou_impar is
     Port ( a : in  STD_LOGIC_VECTOR (3 downto 0);
            b : in  STD_LOGIC_VECTOR (3 downto 0);
@@ -123,7 +128,7 @@ component par_ou_impar is
 			  zero : out STD_LOGIC);
 end component;
 
--Declaração dos sinais que representam as saídas (outputs) da ULA
+--Declaração dos sinais que representam as saídas (outputs) da ULA
 SIGNAL somador_4bits_s : STD_LOGIC_VECTOR (3 downto 0);
 SIGNAL somador_4bits_carrys : STD_LOGIC_VECTOR (4 downto 0);
 SIGNAL subtrator_4bits_s : STD_LOGIC_VECTOR (3 downto 0);

@@ -42,7 +42,7 @@ signal z : STD_LOGIC_VECTOR (3 downto 0);
 
 begin
 
---Deslocamento dos bits: o bit da posição n recebe o bit da posição n+1. Como o bit mais à esquerda não possui um correspondente, receberá sempre 0
+--Deslocamento dos bits: o bit da posição n recebe o bit da posição n+1. Como o bit mais à esquerda (bit 3) não possui um correspondente, receberá sempre 0
 z(3) <= '0';
 z(2) <= a(3);
 z(1) <= a(2);

@@ -41,7 +41,7 @@ entity somador_4bits is
            carry_out : out  STD_LOGIC;                      --Flag de carry out, apontando se houve carry out na soma
 	   carrys : out STD_LOGIC_VECTOR (4 downto 0);      --Vetor que contém os valores dos carrys de cada módulo de somador de um bit
 	   bit_sinal : out STD_LOGIC;                       --Flag de sinal, mostrando se o resultado da soma deu um valor positivo (0) ou negativo (1)
-	   zero : out STD_LOGIC);                           --Flag de zero, apontando o resultado da soma deu exatamente o valor zero ("0000")
+	   zero : out STD_LOGIC);                           --Flag de zero, apontando se o resultado da soma deu exatamente o valor zero ("0000")
 end somador_4bits; 
 
 architecture Behavioral of somador_4bits is

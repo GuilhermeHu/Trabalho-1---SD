@@ -58,7 +58,7 @@ signal c_out: STD_LOGIC;
 
 begin
 
-b <= "0001";        --Segunda entrada do somador de 4 bits, sendo sempre "0001" por estarmos realizando o incremento a 1
+b <= "0001";                    --Segunda entrada do somador de 4 bits, sendo sempre "0001" por estarmos realizando o incremento a 1
 
 --Inversão de todos os bits do binário de entrada
 a_inv(3) <= NOT a(3);

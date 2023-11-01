@@ -32,12 +32,12 @@ use ieee.numeric_std.all;
 
 entity ULA is
     Port ( a : in STD_LOGIC_VECTOR (3 downto 0);
-			  b : in STD_LOGIC_VECTOR (3 downto 0);
-			  selector : in STD_LOGIC_VECTOR (2 downto 0);
+	   b : in STD_LOGIC_VECTOR (3 downto 0);
+	   selector : in STD_LOGIC_VECTOR (2 downto 0);
            s : out  STD_LOGIC_VECTOR (3 downto 0);
-			  overflow : out  STD_LOGIC;
+	   overflow : out  STD_LOGIC;
            carry_out : out  STD_LOGIC;
-			  bit_sinal : out  STD_LOGIC;
+	   bit_sinal : out  STD_LOGIC;
            zero : out  STD_LOGIC);
 end ULA;
 
@@ -49,10 +49,10 @@ component somador_4bits is
            b : in  STD_LOGIC_VECTOR (3 downto 0);
            c_in : in  STD_LOGIC;
            s : out  STD_LOGIC_VECTOR (3 downto 0);
-			  overflow : out  STD_LOGIC;
+	   overflow : out  STD_LOGIC;
            carry_out : out  STD_LOGIC;
            carrys : out STD_LOGIC_VECTOR (4 downto 0);
-			  bit_sinal : out  STD_LOGIC;
+	   bit_sinal : out  STD_LOGIC;
            zero : out  STD_LOGIC);
 end component;
 
@@ -71,17 +71,17 @@ end component;
 component incr_1 is
     Port ( a : in  STD_LOGIC_VECTOR (3 downto 0);
            s : out  STD_LOGIC_VECTOR (3 downto 0);
-			  overflow : out  STD_LOGIC;
+	   overflow : out  STD_LOGIC;
            carry_out : out  STD_LOGIC;
-			  bit_sinal : out  STD_LOGIC;
-			  zero : out STD_LOGIC);
+	   bit_sinal : out  STD_LOGIC;
+	   zero : out STD_LOGIC);
 end component;
 
 -- Realiza o complemento a 2 do número fornecido
 component comp_2 is
     Port ( a : in  STD_LOGIC_VECTOR (3 downto 0);
            s : out  STD_LOGIC_VECTOR (3 downto 0);
-			  bit_sinal : out STD_LOGIC;
+	   bit_sinal : out STD_LOGIC;
            zero : out  STD_LOGIC);
 end component;
 
@@ -90,7 +90,7 @@ end component;
 component desl_dir is
     Port ( a : in  STD_LOGIC_VECTOR (3 downto 0);
            s : out  STD_LOGIC_VECTOR (3 downto 0);
-			  bit_sinal : out  STD_LOGIC;
+	   bit_sinal : out  STD_LOGIC;
            zero : out  STD_LOGIC);
 end component;
 
@@ -99,7 +99,7 @@ end component;
 component desl_esq is
     Port ( a : in  STD_LOGIC_VECTOR (3 downto 0);
            s : out  STD_LOGIC_VECTOR (3 downto 0);
-			  bit_sinal : out  STD_LOGIC;
+	   bit_sinal : out  STD_LOGIC;
            zero : out  STD_LOGIC);
 end component;
 
@@ -108,7 +108,7 @@ end component;
 component comparador is
     Port ( a : in  STD_LOGIC_VECTOR (3 downto 0);
            b : in  STD_LOGIC_VECTOR (3 downto 0);
-			  s : out  STD_LOGIC);
+	   s : out  STD_LOGIC);
 end component;
 
 -- Verifica se a soma de dois numeros fornecidos é par ou ímpar. Caso seja par, resulta em "0000",
@@ -123,7 +123,7 @@ component par_ou_impar is
 			  zero : out STD_LOGIC);
 end component;
 
-
+-Declaração dos sinais que representam as saídas (outputs) da ULA
 SIGNAL somador_4bits_s : STD_LOGIC_VECTOR (3 downto 0);
 SIGNAL somador_4bits_carrys : STD_LOGIC_VECTOR (4 downto 0);
 SIGNAL subtrator_4bits_s : STD_LOGIC_VECTOR (3 downto 0);
@@ -135,8 +135,7 @@ SIGNAL comparador_s : STD_LOGIC;
 SIGNAL par_ou_impar_s : STD_LOGIC;
 
 
--- SIGNAL incr_1_s, desl_esq_s, somador_4bits_s, subtrator_4bits_s, desl_dir_s, par_ou_impar_s, comp_2_s, comparador_s : STD_LOGIC_VECTOR (3 downto 0);
-
+--Declaração sinais usados que representam as flags (overflow, carry_out, sinal e zero) da ULA
 SIGNAL somador_4bits_overflow, subtrator_4bits_overflow, incr_1_overflow, par_ou_impar_overflow: STD_LOGIC;
 SIGNAL somador_4bits_carry_out, subtrator_4bits_carry_out, incr_1_carry_out, par_ou_impar_carry_out : STD_LOGIC;
 SIGNAL somador_4bits_zero, subtrator_4bits_zero, incr_1_zero, comp_2_zero, desl_esq_zero, desl_dir_zero, par_ou_impar_zero, comparador_zero : STD_LOGIC;
@@ -145,6 +144,7 @@ SIGNAL somador_4bits_bit_sinal, subtrator_4bits_bit_sinal, incr_1_bit_sinal, com
 
 begin
 
+--Atribuição dos componentes aos sinais correspontes e execução dos módulos
 somador_4bits_Label: somador_4bits port map (a, b, '0', somador_4bits_s, somador_4bits_overflow, somador_4bits_carry_out, somador_4bits_carrys, somador_4bits_bit_sinal, somador_4bits_zero);
 subtrator_4bits_Label : subtrator_4bits port map (a, b, subtrator_4bits_s, subtrator_4bits_overflow, subtrator_4bits_carry_out, subtrator_4bits_bit_sinal, subtrator_4bits_zero);
 incr_1_Label: incr_1 port map (a, incr_1_s, incr_1_overflow, incr_1_carry_out, incr_1_bit_sinal, incr_1_zero);
@@ -159,35 +159,35 @@ process(selector, incr_1_s, desl_esq_s, somador_4bits_s, subtrator_4bits_s, desl
 
 begin
 	case selector is
-		when "000" => -- somador_4bits
-		   overflow <= somador_4bits_overflow;
-			carry_out <= somador_4bits_carry_out;
-			zero <= somador_4bits_zero;
-			bit_sinal <= somador_4bits_bit_sinal;
-			s <= somador_4bits_s;
-		when "001" => -- subtrator_4bits
-			overflow <= subtrator_4bits_overflow;
+		when "000" => -- somador de 4 bits                                  -- "000" -> somador de 4 bits
+		   overflow <= somador_4bits_overflow;                              -- "001" -> subtrator de 4 bits
+			carry_out <= somador_4bits_carry_out;                       -- "010" -> incremento a 1
+			zero <= somador_4bits_zero;                                 -- "011" -> complemento a 2
+			bit_sinal <= somador_4bits_bit_sinal;                       -- "100" -> deslocamento à direita
+			s <= somador_4bits_s;                                       -- "101" -> deslocamento à esquerda
+		when "001" => -- subtrator de 4 bits                                -- "110" -> comparador
+			overflow <= subtrator_4bits_overflow;                       -- "111" -> par ou ímpar da soma
 			carry_out <= subtrator_4bits_carry_out;
 			zero <= subtrator_4bits_zero;
 			bit_sinal <= subtrator_4bits_bit_sinal;
 			s <= subtrator_4bits_s;
-		when "010" => -- incr_1
+		when "010" => -- incremento a 1
 			overflow <= incr_1_overflow;
 			carry_out <= incr_1_zero;
 			zero <= incr_1_zero;
 			bit_sinal <= incr_1_bit_sinal;
 			s <= incr_1_s;
-		when "011" => -- comp_2
+		when "011" => -- complemento a 2
 			carry_out <= '0';
 			zero <= comp_2_zero;
 			bit_sinal <= comp_2_bit_sinal;
 			s <= comp_2_s;
-		when "100" => -- desl_dir
+		when "100" => -- deslocamento à direita
 			carry_out <= '0';
 			zero <= desl_dir_zero;
 			bit_sinal <= desl_dir_bit_sinal;
 			s <= desl_dir_s;
-		when "101" => -- desl_esq
+		when "101" => -- deslocamento à esquerda
 			carry_out <= '0';
 			zero <= desl_esq_zero;
 			bit_sinal <= desl_esq_bit_sinal;
@@ -200,7 +200,7 @@ begin
 			s(2) <= '0';
 			s(1) <= '0';
 			s(0) <= comparador_s;
-		when others => -- par_ou_impar
+		when others => -- par ou ímpar
 			overflow <= par_ou_impar_overflow;
 			carry_out <= par_ou_impar_carry_out;
 			zero <= par_ou_impar_zero;
